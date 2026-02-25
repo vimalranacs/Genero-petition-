@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Genero Petition | ABES Engineering College</title>
+<meta name="description" content="A respectful student petition for fair and inclusive ticket pricing at the Genero Fest, ABES Engineering College.">
 
 <link rel="stylesheet" href="style.css">
 
@@ -87,7 +88,8 @@ so Genero becomes a celebration accessible to everyone.
 <!-- ================= SIGNATURE COUNTER ================= -->
 
 <div class="counter">
-🔥 <span id="count">0</span> Students Signed
+<span id="count">0</span>
+Students Signed
 </div>
 
 <!-- ================= SIGN FORM ================= -->
@@ -100,7 +102,7 @@ so Genero becomes a celebration accessible to everyone.
 <input type="text" id="roll" placeholder="University Roll Number" required>
 
 <select id="course" required>
-<option value="">Course</option>
+<option value="">Select Course</option>
 <option>B.Tech</option>
 <option>BCA</option>
 <option>MBA</option>
@@ -110,7 +112,7 @@ so Genero becomes a celebration accessible to everyone.
 <input type="text" id="branch" placeholder="Branch (CSE / IT / etc)" required>
 
 <select id="year" required>
-<option value="">Year</option>
+<option value="">Select Year</option>
 <option>1st Year</option>
 <option>2nd Year</option>
 <option>3rd Year</option>
@@ -134,18 +136,30 @@ so Genero becomes a celebration accessible to everyone.
 
 <h2>📊 Participation Statistics</h2>
 
+<div class="chart-wrapper">
 <canvas id="branchChart"></canvas>
-<br>
+</div>
+
+<div class="chart-wrapper">
 <canvas id="yearChart"></canvas>
+</div>
 
 <!-- ================= COMMENTS ================= -->
 
 <h2>💬 Anonymous Student Opinions</h2>
 
+<div class="comment-section">
 <textarea id="commentText" placeholder="Share your thoughts anonymously..."></textarea>
-<button onclick="addComment()">Post Comment</button>
+<button onclick="addComment()">Post Comment 💬</button>
+</div>
 
 <div id="comments"></div>
+
+<!-- ================= FOOTER ================= -->
+
+<div class="footer">
+    Made with ❤️ by students, for students.
+</div>
 
 </div>
 
