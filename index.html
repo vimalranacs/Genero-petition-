@@ -4,172 +4,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Genero Petition | ABES Engineering College</title>
+    <title>Student Voice | ABES EC</title>
     <meta name="description"
-        content="A respectful student petition for fair and inclusive ticket pricing at the Genero Fest, ABES Engineering College.">
-
+        content="A student-driven platform for sharing collective feedback at ABES Engineering College.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-
-    <!-- Charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </head>
 
 <body>
 
-    <div class="container">
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+        <div class="hero-inner">
+            <span class="badge">ABES Engineering College</span>
+            <h1>Every Student<br>Deserves To Be Heard</h1>
+            <p class="hero-sub">A collective student initiative for fair and inclusive participation in the upcoming
+                fest.</p>
 
-        <!-- HEADER -->
-        <header class="header">
-            <h1>Genero Fest Student Petition</h1>
-            <p class="subtitle">A respectful student request for fair and inclusive participation at ABES Engineering
-                College.</p>
-        </header>
-
-        <!-- PETITION CONTENT -->
-        <section class="card petition-box">
-
-            <h2>Why this petition exists</h2>
-
-            <p>
-                Genero is a 3-day college fest organized at ABES Engineering College.
-                Students appreciate the effort and enthusiasm behind organizing such a large
-                event. However, many students are facing genuine financial concerns regarding
-                the current ticket pricing.
-            </p>
-
-            <p>
-                The <strong>early bird ticket price is ₹1,000</strong>, launched close to month-end —
-                a time when many students already manage expenses like hostel fees,
-                transportation, food, and academic costs.
-            </p>
-
-            <h3>Estimated Collection</h3>
-
-            <div class="calculation">
-                If 5,000–6,000 tickets are sold:<br><br>
-                ₹1,000 × 5,000 students = <strong>₹50,00,000</strong><br>
-                ₹1,000 × 6,000 students = <strong>₹60,00,000</strong>
+            <div class="hero-stats" id="heroStats">
+                <div class="stat-item">
+                    <span class="stat-num" id="heroCount">—</span>
+                    <span class="stat-label">Signatures</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-num" id="heroGoalPercent">—</span>
+                    <span class="stat-label">of 500 Goal</span>
+                </div>
             </div>
 
-            <p>
-                Even with conservative estimates, the fest may generate
-                <strong>₹30–50 Lakhs+</strong> through ticket sales alone.
-                At the same time, sponsors and branding partnerships are expected.
-                Students therefore question whether such a high participation fee is necessary.
-            </p>
+            <div class="progress-wrap">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+            </div>
 
-            <h3>Student Concerns</h3>
-
-            <ul>
-                <li>Many students rely on monthly allowances and cannot arrange ₹1,000 instantly.</li>
-                <li>Early bird timing did not consider financial cycles of students.</li>
-                <li>College fests in many institutions remain free or low-cost for students.</li>
-                <li>High pricing may exclude a large section of students from participation.</li>
-            </ul>
-
-            <h3>Our Requests</h3>
-
-            <ul>
-                <li>Extend the early bird deadline</li>
-                <li>Reduce early bird pricing</li>
-                <li>Lower regular ticket price</li>
-                <li>Ensure inclusivity so maximum students can participate</li>
-            </ul>
-
-            <p class="note">
-                This petition is not against the fest or organizers.
-                It is a collective student voice requesting reconsideration
-                so Genero becomes a celebration accessible to everyone.
-            </p>
-
-        </section>
-
-        <!-- SIGNATURE COUNTER -->
-        <div class="counter card">
-            <span class="count-number" id="count">0</span>
-            <span class="count-label">Students Have Signed</span>
+            <div class="hero-actions">
+                <button class="btn-primary" onclick="scrollToSign()">Sign the Petition</button>
+                <button class="btn-secondary" onclick="togglePetition()">Read Why →</button>
+            </div>
         </div>
+    </section>
 
-        <!-- SIGN FORM -->
-        <section class="card">
-            <h2>Sign the Petition</h2>
+    <!-- ===== COLLAPSIBLE PETITION ===== -->
+    <section class="petition-section" id="petitionSection">
+        <div class="wrap">
+            <div class="petition-toggle" id="petitionToggle" onclick="togglePetition()">
+                <h2>About This Petition</h2>
+                <span class="toggle-icon" id="toggleIcon">▼</span>
+            </div>
 
-            <form id="petitionForm">
-                <div class="form-grid">
-                    <input type="text" id="name" placeholder="Full Name" required>
-                    <input type="text" id="roll" placeholder="University Roll Number" required>
+            <div class="petition-body" id="petitionBody">
+                <div class="petition-content">
+                    <p>Genero is a 3-day college fest at ABES Engineering College. While students appreciate the effort
+                        behind the event, many face genuine financial concerns about the current ticket pricing.</p>
+
+                    <div class="info-card">
+                        <h4>💰 Pricing Concern</h4>
+                        <p>The <strong>early bird ticket is ₹1,000</strong>, launched close to month-end when students
+                            already manage hostel fees, food, transport, and academic costs.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>📊 Estimated Collection</h4>
+                        <p>₹1,000 × 5,000 students = <strong>₹50,00,000</strong><br>
+                            ₹1,000 × 6,000 students = <strong>₹60,00,000</strong></p>
+                        <p>Even conservatively, the fest may generate <strong>₹30–50 Lakhs+</strong> through tickets
+                            alone — before sponsorships.</p>
+                    </div>
+
+                    <h4>Key Concerns</h4>
+                    <ul>
+                        <li>Many students rely on monthly allowances and cannot arrange ₹1,000 instantly</li>
+                        <li>Early bird timing ignored students' financial cycles</li>
+                        <li>College fests elsewhere remain free or low-cost</li>
+                        <li>High pricing may exclude a large student population</li>
+                    </ul>
+
+                    <h4>What We're Asking For</h4>
+                    <ul class="request-list">
+                        <li>Extend the early bird deadline</li>
+                        <li>Reduce early bird pricing</li>
+                        <li>Lower the regular ticket price</li>
+                        <li>Ensure maximum students can participate</li>
+                    </ul>
+
+                    <div class="disclaimer">
+                        This petition is not against the fest or organizers. It is a collective student voice requesting
+                        reconsideration so Genero becomes a celebration accessible to everyone.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SIGN FORM ===== -->
+    <section class="section" id="signSection">
+        <div class="wrap">
+            <h2 class="section-title">Add Your Signature</h2>
+            <p class="section-desc">Your identity is recorded but displayed anonymously in the public list.</p>
+
+            <form id="petitionForm" class="sign-form">
+                <div class="form-row">
+                    <input type="text" id="nameInput" placeholder="Full Name" required>
+                    <input type="text" id="rollInput" placeholder="Roll Number" required>
                 </div>
 
-                <select id="course" required>
+                <select id="courseSelect" required>
                     <option value="">Select Course</option>
-                    <option>B.Tech</option>
-                    <option>BCA</option>
-                    <option>MBA</option>
-                    <option>MCA</option>
+                    <option value="B.Tech">B.Tech</option>
+                    <option value="BCA">BCA</option>
+                    <option value="MBA">MBA</option>
+                    <option value="MCA">MCA</option>
                 </select>
 
-                <div class="form-grid">
-                    <input type="text" id="branch" placeholder="Branch (CSE / IT / etc)" required>
-                    <select id="year" required>
+                <div class="form-row">
+                    <input type="text" id="branchInput" placeholder="Branch (e.g. CSE, IT, ECE)" required>
+                    <select id="yearSelect" required>
                         <option value="">Select Year</option>
-                        <option>1st Year</option>
-                        <option>2nd Year</option>
-                        <option>3rd Year</option>
-                        <option>4th Year</option>
+                        <option value="1st Year">1st Year</option>
+                        <option value="2nd Year">2nd Year</option>
+                        <option value="3rd Year">3rd Year</option>
+                        <option value="4th Year">4th Year</option>
                     </select>
                 </div>
 
-                <button type="submit" id="submitBtn">Sign Petition</button>
+                <button type="submit" id="submitBtn" class="btn-primary">Sign Petition</button>
             </form>
 
-            <p id="message"></p>
-        </section>
-
-        <!-- SHARE -->
-        <div class="share-row">
-            <button class="btn-outline" onclick="shareLink()">🔗 Copy Link</button>
-            <button class="btn-whatsapp" onclick="shareWhatsApp()">📲 WhatsApp</button>
+            <div id="message"></div>
         </div>
+    </section>
 
-        <!-- GRAPHS -->
-        <section class="card">
-            <h2>Participation Statistics</h2>
-            <div class="chart-container">
-                <canvas id="branchChart"></canvas>
+    <!-- ===== SIGNED STUDENTS ===== -->
+    <section class="section section-alt">
+        <div class="wrap">
+            <div class="section-header">
+                <h2 class="section-title">Who Has Signed</h2>
+                <span class="pill" id="signedCountPill">0 signatures</span>
             </div>
-            <div class="chart-container">
-                <canvas id="yearChart"></canvas>
-            </div>
-        </section>
+            <p class="section-desc">Students who have added their voice to this petition.</p>
 
-        <!-- COMMENTS -->
-        <section class="card">
-            <h2>Student Opinions</h2>
+            <div id="studentList" class="student-grid">
+                <p class="empty-state">Loading signatures...</p>
+            </div>
+
+            <button class="btn-load-more" id="loadMoreBtn" style="display:none" onclick="showMoreStudents()">Show
+                More</button>
+        </div>
+    </section>
+
+    <!-- ===== STATISTICS ===== -->
+    <section class="section">
+        <div class="wrap">
+            <h2 class="section-title">Statistics</h2>
+            <p class="section-desc">Distribution of signatures across branches and years.</p>
+
+            <div class="chart-grid">
+                <div class="chart-card">
+                    <h4>By Branch</h4>
+                    <canvas id="branchChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h4>By Year</h4>
+                    <canvas id="yearChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== COMMENTS ===== -->
+    <section class="section section-alt">
+        <div class="wrap">
+            <h2 class="section-title">Student Opinions</h2>
+            <p class="section-desc">Share your thoughts anonymously.</p>
 
             <div class="comment-form">
-                <textarea id="commentText" placeholder="Share your thoughts (posted anonymously)..."
-                    rows="3"></textarea>
-                <button onclick="addComment()" id="commentBtn">Post Comment</button>
+                <textarea id="commentText" placeholder="Write your opinion here..." rows="3"></textarea>
+                <button class="btn-primary" onclick="postComment()" id="commentBtn">Post Comment</button>
             </div>
 
-            <div id="comments"></div>
-        </section>
+            <div id="commentsList"></div>
+        </div>
+    </section>
 
-        <!-- FOOTER -->
-        <footer class="footer">
-            Made with care by students, for students.
-        </footer>
+    <!-- ===== SHARE ===== -->
+    <section class="section share-section">
+        <div class="wrap">
+            <h2 class="section-title">Spread the Word</h2>
+            <p class="section-desc">Help more students see this petition.</p>
+            <div class="share-buttons">
+                <button class="btn-share btn-copy" onclick="copyLink()">🔗 Copy Link</button>
+                <button class="btn-share btn-wa" onclick="shareWhatsApp()">📲 WhatsApp</button>
+                <button class="btn-share btn-tw" onclick="shareTwitter()">🐦 Twitter</button>
+            </div>
+        </div>
+    </section>
 
-    </div>
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="wrap">
+            <p>Student Voice — Built with care by students, for students.</p>
+        </div>
+    </footer>
 
     <script type="module" src="script.js"></script>
-
 </body>
 
 </html>
