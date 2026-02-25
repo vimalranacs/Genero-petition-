@@ -39,12 +39,11 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 960px;
             margin: 0 auto;
             padding: 24px 20px;
         }
 
-        /* Login */
         .login-box {
             max-width: 400px;
             margin: 60px auto;
@@ -92,7 +91,6 @@
             margin-top: 16px;
         }
 
-        /* Admin Panel */
         .admin-panel {
             display: none;
         }
@@ -135,12 +133,39 @@
             background: #fee2e2;
         }
 
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-box {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-box .num {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+
+        .stat-box .label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         .tabs {
             display: flex;
             gap: 8px;
             margin-bottom: 20px;
             border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 0;
         }
 
         .tab {
@@ -174,6 +199,120 @@
             display: block;
         }
 
+        .action-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-add {
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-add:hover {
+            background: #2563eb;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal h3 {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+        }
+
+        .modal input,
+        .modal select {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background: #f8fafc;
+            font-family: inherit;
+            font-size: 0.85rem;
+        }
+
+        .modal input:focus,
+        .modal select:focus {
+            border-color: #3b82f6;
+            outline: none;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 12px;
+        }
+
+        .btn-save {
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-save:hover {
+            background: #2563eb;
+        }
+
+        .btn-cancel {
+            background: #f1f5f9;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-cancel:hover {
+            background: #e2e8f0;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -186,8 +325,8 @@
         th {
             background: #f1f5f9;
             text-align: left;
-            padding: 10px 14px;
-            font-size: 0.78rem;
+            padding: 10px 12px;
+            font-size: 0.72rem;
             font-weight: 600;
             color: #64748b;
             text-transform: uppercase;
@@ -195,8 +334,8 @@
         }
 
         td {
-            padding: 10px 14px;
-            font-size: 0.85rem;
+            padding: 10px 12px;
+            font-size: 0.82rem;
             border-top: 1px solid #f1f5f9;
         }
 
@@ -208,9 +347,9 @@
             background: #fef2f2;
             color: #ef4444;
             border: 1px solid #fecaca;
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 4px;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 600;
             cursor: pointer;
             font-family: inherit;
@@ -220,32 +359,21 @@
             background: #fee2e2;
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .stat-box {
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 16px;
-            text-align: center;
-        }
-
-        .stat-box .num {
-            font-size: 1.6rem;
-            font-weight: 700;
+        .btn-edit {
+            background: #eff6ff;
             color: #3b82f6;
+            border: 1px solid #dbeafe;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            margin-right: 4px;
         }
 
-        .stat-box .label {
-            font-size: 0.75rem;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .btn-edit:hover {
+            background: #dbeafe;
         }
 
         .back-link {
@@ -254,6 +382,21 @@
             color: #3b82f6;
             text-decoration: none;
             font-size: 0.85rem;
+        }
+
+        @media (max-width: 640px) {
+
+            th,
+            td {
+                padding: 8px 6px;
+                font-size: 0.72rem;
+            }
+
+            .btn-edit,
+            .btn-delete {
+                padding: 3px 6px;
+                font-size: 0.65rem;
+            }
         }
     </style>
 </head>
@@ -265,7 +408,6 @@
         <p>Manage signatures and comments</p>
     </div>
 
-    <!-- LOGIN -->
     <div class="login-box" id="loginBox">
         <h2>Admin Access</h2>
         <p>Sign in with your authorized Google account to manage entries.</p>
@@ -285,7 +427,6 @@
         <p class="error-msg" id="loginError"></p>
     </div>
 
-    <!-- ADMIN PANEL -->
     <div class="container admin-panel" id="adminPanel">
         <div class="admin-bar">
             <div class="user-info">Logged in as <strong id="userName"></strong></div>
@@ -299,15 +440,69 @@
             <button class="tab" onclick="switchTab('comments', this)">Comments</button>
         </div>
 
-        <div class="tab-content active" id="signaturesTab"></div>
-        <div class="tab-content" id="commentsTab"></div>
+        <div class="tab-content active" id="signaturesTab">
+            <div class="action-bar">
+                <button class="btn-add" onclick="openAddSignature()">+ Add Signature</button>
+            </div>
+            <div id="sigTable"></div>
+        </div>
+
+        <div class="tab-content" id="commentsTab">
+            <div class="action-bar">
+                <button class="btn-add" onclick="openAddComment()">+ Add Comment</button>
+            </div>
+            <div id="comTable"></div>
+        </div>
 
         <a href="index.html" class="back-link">← Back to Petition</a>
     </div>
 
+    <!-- ADD/EDIT SIGNATURE MODAL -->
+    <div class="modal-overlay" id="sigModal">
+        <div class="modal">
+            <h3 id="sigModalTitle">Add Signature</h3>
+            <input type="hidden" id="editSigId">
+            <input id="mName" placeholder="Full Name" required>
+            <input id="mRoll" placeholder="Roll Number" required>
+            <select id="mCourse">
+                <option value="">Select Course</option>
+                <option value="B.Tech">B.Tech</option>
+                <option value="BCA">BCA</option>
+                <option value="MBA">MBA</option>
+                <option value="MCA">MCA</option>
+            </select>
+            <input id="mBranch" placeholder="Branch (e.g. CSE)">
+            <select id="mYear">
+                <option value="">Select Year</option>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+            </select>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('sigModal')">Cancel</button>
+                <button class="btn-save" onclick="saveSignature()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD/EDIT COMMENT MODAL -->
+    <div class="modal-overlay" id="comModal">
+        <div class="modal">
+            <h3 id="comModalTitle">Add Comment</h3>
+            <input type="hidden" id="editComId">
+            <textarea id="mComText" placeholder="Comment text..." rows="3"
+                style="width:100%;padding:10px 12px;margin-bottom:10px;border:1px solid #e2e8f0;border-radius:6px;font-family:inherit;font-size:0.85rem;resize:vertical"></textarea>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('comModal')">Cancel</button>
+                <button class="btn-save" onclick="saveComment()">Save</button>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, deleteDoc, doc, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { firebaseConfig } from "./firebase-config.js";
 
@@ -316,21 +511,17 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // IMPORTANT: Replace this with YOUR email address
         const ADMIN_EMAIL = "vimalrana877@gmail.com";
 
         // ===== AUTH =====
         window.googleLogin = async () => {
             try {
                 const result = await signInWithPopup(auth, provider);
-                const email = result.user.email;
-
-                if (email !== ADMIN_EMAIL) {
+                if (result.user.email !== ADMIN_EMAIL) {
                     document.getElementById("loginError").textContent = "Access denied. This account is not authorized.";
                     await signOut(auth);
                     return;
                 }
-
                 showAdmin(result.user);
             } catch (err) {
                 console.error("Login error:", err);
@@ -344,11 +535,8 @@
             document.getElementById("loginBox").style.display = "block";
         };
 
-        // Check if already logged in
         onAuthStateChanged(auth, (user) => {
-            if (user && user.email === ADMIN_EMAIL) {
-                showAdmin(user);
-            }
+            if (user && user.email === ADMIN_EMAIL) showAdmin(user);
         });
 
         function showAdmin(user) {
@@ -366,66 +554,165 @@
             document.getElementById(tab + "Tab").classList.add("active");
         };
 
+        // ===== MODALS =====
+        window.closeModal = (id) => {
+            document.getElementById(id).classList.remove("active");
+        };
+
+        window.openAddSignature = () => {
+            document.getElementById("sigModalTitle").textContent = "Add Signature";
+            document.getElementById("editSigId").value = "";
+            document.getElementById("mName").value = "";
+            document.getElementById("mRoll").value = "";
+            document.getElementById("mCourse").value = "";
+            document.getElementById("mBranch").value = "";
+            document.getElementById("mYear").value = "";
+            document.getElementById("sigModal").classList.add("active");
+        };
+
+        window.openEditSignature = (id, name, roll, course, branch, year) => {
+            document.getElementById("sigModalTitle").textContent = "Edit Signature";
+            document.getElementById("editSigId").value = id;
+            document.getElementById("mName").value = name;
+            document.getElementById("mRoll").value = roll;
+            document.getElementById("mCourse").value = course;
+            document.getElementById("mBranch").value = branch;
+            document.getElementById("mYear").value = year;
+            document.getElementById("sigModal").classList.add("active");
+        };
+
+        window.openAddComment = () => {
+            document.getElementById("comModalTitle").textContent = "Add Comment";
+            document.getElementById("editComId").value = "";
+            document.getElementById("mComText").value = "";
+            document.getElementById("comModal").classList.add("active");
+        };
+
+        window.openEditComment = (id, text) => {
+            document.getElementById("comModalTitle").textContent = "Edit Comment";
+            document.getElementById("editComId").value = id;
+            document.getElementById("mComText").value = text;
+            document.getElementById("comModal").classList.add("active");
+        };
+
+        // ===== SAVE =====
+        window.saveSignature = async () => {
+            const id = document.getElementById("editSigId").value;
+            const data = {
+                name: document.getElementById("mName").value.trim(),
+                roll: document.getElementById("mRoll").value.trim(),
+                course: document.getElementById("mCourse").value,
+                branch: document.getElementById("mBranch").value.trim().toUpperCase(),
+                year: document.getElementById("mYear").value
+            };
+
+            if (!data.name || !data.roll) { alert("Name and Roll are required."); return; }
+
+            try {
+                if (id) {
+                    await updateDoc(doc(db, "signatures", id), data);
+                } else {
+                    data.timestamp = Date.now();
+                    await addDoc(collection(db, "signatures"), data);
+                }
+                closeModal("sigModal");
+                loadAdminData();
+            } catch (err) {
+                console.error("Save error:", err);
+                alert("Save failed: " + err.message);
+            }
+        };
+
+        window.saveComment = async () => {
+            const id = document.getElementById("editComId").value;
+            const text = document.getElementById("mComText").value.trim();
+
+            if (!text) { alert("Comment text is required."); return; }
+
+            try {
+                if (id) {
+                    await updateDoc(doc(db, "comments", id), { text });
+                } else {
+                    await addDoc(collection(db, "comments"), { text, time: Date.now(), likes: 0 });
+                }
+                closeModal("comModal");
+                loadAdminData();
+            } catch (err) {
+                console.error("Save error:", err);
+                alert("Save failed: " + err.message);
+            }
+        };
+
         // ===== LOAD DATA =====
         async function loadAdminData() {
             try {
-                // Signatures
                 const sigSnap = await getDocs(collection(db, "signatures"));
                 const sigs = [];
                 sigSnap.forEach(d => sigs.push({ ...d.data(), id: d.id }));
                 sigs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
-                // Comments
                 const comSnap = await getDocs(collection(db, "comments"));
                 const coms = [];
                 comSnap.forEach(d => coms.push({ ...d.data(), id: d.id }));
                 coms.sort((a, b) => (b.time || 0) - (a.time || 0));
 
                 // Stats
-                const statsGrid = document.getElementById("statsGrid");
-                statsGrid.innerHTML = `
+                document.getElementById("statsGrid").innerHTML = `
             <div class="stat-box"><div class="num">${sigs.length}</div><div class="label">Signatures</div></div>
             <div class="stat-box"><div class="num">${coms.length}</div><div class="label">Comments</div></div>
             <div class="stat-box"><div class="num">${new Set(sigs.map(s => (s.branch || '').toUpperCase())).size}</div><div class="label">Branches</div></div>
+            <div class="stat-box"><div class="num">${new Set(sigs.map(s => s.course || '')).size}</div><div class="label">Courses</div></div>
         `;
 
                 // Signatures table
-                const sigTab = document.getElementById("signaturesTab");
+                const sigTable = document.getElementById("sigTable");
                 if (sigs.length === 0) {
-                    sigTab.innerHTML = '<p style="color:#94a3b8;padding:20px">No signatures yet.</p>';
+                    sigTable.innerHTML = '<p style="color:#94a3b8;padding:20px">No signatures.</p>';
                 } else {
-                    let html = `<table><thead><tr><th>Name</th><th>Roll</th><th>Course</th><th>Branch</th><th>Year</th><th>Action</th></tr></thead><tbody>`;
+                    let html = `<table><thead><tr><th>Name</th><th>Roll</th><th>Course</th><th>Branch</th><th>Year</th><th>Actions</th></tr></thead><tbody>`;
                     sigs.forEach(s => {
+                        const eName = esc(s.name);
+                        const eRoll = esc(s.roll);
+                        const eCourse = esc(s.course);
+                        const eBranch = esc(s.branch);
+                        const eYear = esc(s.year);
                         html += `<tr>
-                    <td>${esc(s.name)}</td>
-                    <td>${esc(s.roll)}</td>
-                    <td>${esc(s.course)}</td>
-                    <td>${esc(s.branch)}</td>
-                    <td>${esc(s.year)}</td>
-                    <td><button class="btn-delete" onclick="deleteEntry('signatures','${s.id}')">Delete</button></td>
+                    <td>${eName}</td>
+                    <td>${eRoll}</td>
+                    <td>${eCourse}</td>
+                    <td>${eBranch}</td>
+                    <td>${eYear}</td>
+                    <td>
+                        <button class="btn-edit" onclick="openEditSignature('${s.id}','${eName}','${eRoll}','${eCourse}','${eBranch}','${eYear}')">Edit</button>
+                        <button class="btn-delete" onclick="deleteEntry('signatures','${s.id}')">Delete</button>
+                    </td>
                 </tr>`;
                     });
                     html += '</tbody></table>';
-                    sigTab.innerHTML = html;
+                    sigTable.innerHTML = html;
                 }
 
                 // Comments table
-                const comTab = document.getElementById("commentsTab");
+                const comTable = document.getElementById("comTable");
                 if (coms.length === 0) {
-                    comTab.innerHTML = '<p style="color:#94a3b8;padding:20px">No comments yet.</p>';
+                    comTable.innerHTML = '<p style="color:#94a3b8;padding:20px">No comments.</p>';
                 } else {
-                    let html = `<table><thead><tr><th>Comment</th><th>Likes</th><th>Date</th><th>Action</th></tr></thead><tbody>`;
+                    let html = `<table><thead><tr><th>Comment</th><th>Likes</th><th>Date</th><th>Actions</th></tr></thead><tbody>`;
                     coms.forEach(c => {
                         const date = c.time ? new Date(c.time).toLocaleDateString("en-IN") : "";
+                        const safeText = esc(c.text).replace(/'/g, "\\'");
                         html += `<tr>
-                    <td style="max-width:400px">${esc(c.text)}</td>
+                    <td style="max-width:350px">${esc(c.text)}</td>
                     <td>${c.likes || 0}</td>
                     <td>${date}</td>
-                    <td><button class="btn-delete" onclick="deleteEntry('comments','${c.id}')">Delete</button></td>
+                    <td>
+                        <button class="btn-edit" onclick="openEditComment('${c.id}','${safeText}')">Edit</button>
+                        <button class="btn-delete" onclick="deleteEntry('comments','${c.id}')">Delete</button>
+                    </td>
                 </tr>`;
                     });
                     html += '</tbody></table>';
-                    comTab.innerHTML = html;
+                    comTable.innerHTML = html;
                 }
 
             } catch (err) {
@@ -436,13 +723,12 @@
         // ===== DELETE =====
         window.deleteEntry = async (collName, docId) => {
             if (!confirm("Are you sure you want to delete this entry?")) return;
-
             try {
                 await deleteDoc(doc(db, collName, docId));
-                loadAdminData(); // Refresh
+                loadAdminData();
             } catch (err) {
                 console.error("Delete error:", err);
-                alert("Failed to delete: " + err.message);
+                alert("Delete failed: " + err.message);
             }
         };
 

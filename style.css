@@ -311,11 +311,6 @@ body {
     font-weight: 700;
 }
 
-.request-list li::before {
-    content: '✓' !important;
-    color: #22c55e !important;
-}
-
 .info-card {
     background: #fff;
     border: 1px solid #e2e8f0;
@@ -347,6 +342,90 @@ body {
     color: #92400e;
     font-style: italic;
     margin-top: 16px;
+}
+
+/* ===== DEMANDS ===== */
+.demands-section {
+    background: #fff;
+}
+
+.demands-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.demand-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px 16px;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.demand-card:hover {
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.08);
+}
+
+.demand-icon {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+}
+
+.demand-card h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 6px;
+}
+
+.demand-card p {
+    font-size: 0.78rem;
+    color: #64748b;
+    line-height: 1.5;
+}
+
+/* ===== PLEDGE ===== */
+.pledge-box {
+    background: linear-gradient(135deg, #0f172a, #1e3a5f);
+    color: #fff;
+    border-radius: 12px;
+    padding: 36px 32px;
+    text-align: center;
+}
+
+.pledge-box h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.pledge-box p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pledge-box p strong {
+    color: #fbbf24;
+}
+
+.pledge-count {
+    margin-top: 20px;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.pledge-count span {
+    color: #60a5fa;
+    font-weight: 700;
+    font-size: 1.4rem;
 }
 
 /* ===== FORM ===== */
@@ -445,6 +524,117 @@ textarea {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* ===== CERTIFICATE MODAL ===== */
+.cert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.cert-overlay.active {
+    display: flex;
+}
+
+.cert-container {
+    text-align: center;
+    max-width: 580px;
+    width: 100%;
+}
+
+.cert-frame {
+    background: #fffef5;
+    border-radius: 4px;
+    padding: 6px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.cert-border {
+    border: 3px solid #b8860b;
+    border-radius: 2px;
+    padding: 4px;
+}
+
+.cert-inner {
+    border: 1px solid #d4a843;
+    padding: 32px 28px;
+    text-align: center;
+}
+
+.cert-logo {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #b8860b;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.cert-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: #1a1a2e;
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+
+.cert-divider {
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #b8860b, transparent);
+    margin: 14px auto;
+}
+
+.cert-body {
+    font-size: 0.82rem;
+    color: #4a4a4a;
+    line-height: 1.6;
+    margin-bottom: 6px;
+}
+
+.cert-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: #1a1a2e;
+    margin: 10px 0;
+    font-weight: 700;
+}
+
+.cert-footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 20px;
+}
+
+.cert-sig-line {
+    width: 120px;
+    border-bottom: 1px solid #333;
+    margin-bottom: 4px;
+}
+
+.cert-small {
+    font-size: 0.7rem;
+    color: #666;
+    margin: 0;
+}
+
+.cert-hint {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.85rem;
+    margin-top: 16px;
+    line-height: 1.5;
 }
 
 /* ===== TICKER ===== */
@@ -825,6 +1015,10 @@ canvas {
         grid-template-columns: 1fr;
     }
 
+    .demands-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
     .share-buttons {
         flex-direction: column;
     }
@@ -845,5 +1039,33 @@ canvas {
     .hero-actions button {
         width: 100%;
         max-width: 280px;
+    }
+
+    .cert-inner {
+        padding: 24px 16px;
+    }
+
+    .cert-title {
+        font-size: 1.2rem;
+    }
+
+    .cert-name {
+        font-size: 1.3rem;
+    }
+
+    .pledge-box {
+        padding: 28px 20px;
+    }
+}
+
+@media (max-width: 400px) {
+    .demands-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cert-footer-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
     }
 }

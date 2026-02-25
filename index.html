@@ -9,7 +9,9 @@
         content="A student-driven platform for sharing collective feedback at ABES Engineering College.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -80,14 +82,8 @@
                         <li>Early bird timing ignored students' financial cycles</li>
                         <li>College fests elsewhere remain free or low-cost</li>
                         <li>High pricing may exclude a large student population</li>
-                    </ul>
-
-                    <h4>What We're Asking For</h4>
-                    <ul class="request-list">
-                        <li>Extend the early bird deadline</li>
-                        <li>Reduce early bird pricing</li>
-                        <li>Lower the regular ticket price</li>
-                        <li>Ensure maximum students can participate</li>
+                        <li>No transparency on star performers, event lineup, or artist details</li>
+                        <li>Students can't make informed purchasing decisions without seeing the event lineup</li>
                     </ul>
 
                     <div class="disclaimer">
@@ -99,11 +95,67 @@
         </div>
     </section>
 
+    <!-- ===== OUR DEMANDS ===== -->
+    <section class="section demands-section">
+        <div class="wrap">
+            <h2 class="section-title">Our Demands</h2>
+            <p class="section-desc">What we're collectively asking the organizers for.</p>
+            <div class="demands-grid">
+                <div class="demand-card">
+                    <div class="demand-icon">💸</div>
+                    <h4>Lower Ticket Prices</h4>
+                    <p>Reduce the early bird and regular ticket prices to a student-friendly range.</p>
+                </div>
+                <div class="demand-card">
+                    <div class="demand-icon">📅</div>
+                    <h4>Extend Deadlines</h4>
+                    <p>Give students more time to arrange funds by extending the early bird window.</p>
+                </div>
+                <div class="demand-card">
+                    <div class="demand-icon">🎤</div>
+                    <h4>Reveal Star Lineup</h4>
+                    <p>Disclose the performing artists and event schedule before ticket purchases.</p>
+                </div>
+                <div class="demand-card">
+                    <div class="demand-icon">📋</div>
+                    <h4>Event Transparency</h4>
+                    <p>Publish a complete event breakdown — what each ticket covers, what's included.</p>
+                </div>
+                <div class="demand-card">
+                    <div class="demand-icon">🎫</div>
+                    <h4>Flexible Options</h4>
+                    <p>Offer day passes or partial event tickets instead of a single ₹1,000 pass.</p>
+                </div>
+                <div class="demand-card">
+                    <div class="demand-icon">🤝</div>
+                    <h4>Student Committee</h4>
+                    <p>Include student representatives in pricing and planning decisions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PLEDGE ===== -->
+    <section class="section section-alt pledge-section">
+        <div class="wrap">
+            <div class="pledge-box">
+                <h2>✊ Our Pledge</h2>
+                <p>By signing this petition, I pledge that <strong>I will not purchase Genero tickets</strong> until our
+                    collective voice is heard and meaningful relief has been provided.</p>
+                <p>We stand together. We demand transparency, fairness, and respect for the student community.</p>
+                <div class="pledge-count">
+                    <span id="pledgeCount">—</span> students have taken this pledge
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ===== SIGN FORM ===== -->
     <section class="section" id="signSection">
         <div class="wrap">
             <h2 class="section-title">Add Your Signature</h2>
-            <p class="section-desc">Your identity is recorded. Names are displayed publicly.</p>
+            <p class="section-desc">Sign the petition and take the pledge. You'll receive a certificate to screenshot.
+            </p>
 
             <form id="petitionForm" class="sign-form">
                 <div class="form-row">
@@ -132,15 +184,49 @@
                     </select>
                 </div>
 
-                <!-- Other branch input (hidden by default) -->
                 <input type="text" id="otherBranchInput" placeholder="Enter your branch name" style="display:none">
 
-                <button type="submit" id="submitBtn" class="btn-primary btn-full">Sign Petition</button>
+                <button type="submit" id="submitBtn" class="btn-primary btn-full">Sign Petition & Take Pledge</button>
             </form>
 
             <div id="message"></div>
         </div>
     </section>
+
+    <!-- ===== CERTIFICATE MODAL ===== -->
+    <div class="cert-overlay" id="certOverlay" onclick="closeCertificate(event)">
+        <div class="cert-container" id="certContainer">
+            <div class="cert-frame" id="certFrame">
+                <div class="cert-border">
+                    <div class="cert-inner">
+                        <div class="cert-logo">STUDENT VOICE</div>
+                        <h2 class="cert-title">Certificate of Pledge</h2>
+                        <div class="cert-divider"></div>
+                        <p class="cert-body">This is to certify that</p>
+                        <h3 class="cert-name" id="certName">—</h3>
+                        <p class="cert-body">
+                            of <strong id="certBranch">—</strong>, <strong id="certCourse">—</strong> — <strong
+                                id="certYear">—</strong>
+                        </p>
+                        <p class="cert-body">has signed the Genero Student Petition and pledges to stand with fellow
+                            students for fair and inclusive fest pricing at ABES Engineering College.</p>
+                        <div class="cert-divider"></div>
+                        <div class="cert-footer-row">
+                            <div>
+                                <div class="cert-sig-line"></div>
+                                <p class="cert-small">Student Voice Team</p>
+                            </div>
+                            <div>
+                                <p class="cert-small"><strong>Signature #<span id="certNumber">—</span></strong></p>
+                                <p class="cert-small" id="certDate">—</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="cert-hint">📸 Take a screenshot of this certificate!<br>Tap anywhere outside to close.</p>
+        </div>
+    </div>
 
     <!-- ===== RECENTLY SIGNED TICKER ===== -->
     <section class="ticker-section" id="tickerSection" style="display:none">
@@ -223,8 +309,17 @@
                         <span>Is this petition against the college or organizers?</span>
                         <span class="faq-icon">+</span>
                     </div>
-                    <div class="faq-a">No. This is a respectful collective student request for reconsideration of ticket
-                        pricing. It supports the fest while asking for fair pricing.</div>
+                    <div class="faq-a">No. This is a respectful collective student request. We appreciate the
+                        organizers' hard work and simply want fair pricing so everyone can participate.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q" onclick="toggleFaq(this)">
+                        <span>What does the pledge mean?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-a">By signing, you're saying you'll hold off on buying tickets until the organizers
+                        address student concerns — lower prices, extended deadlines, or event transparency. It's a
+                        peaceful, collective stand.</div>
                 </div>
                 <div class="faq-item">
                     <div class="faq-q" onclick="toggleFaq(this)">
@@ -244,11 +339,12 @@
                 </div>
                 <div class="faq-item">
                     <div class="faq-q" onclick="toggleFaq(this)">
-                        <span>How can I help beyond signing?</span>
+                        <span>Why should I ask for the star lineup?</span>
                         <span class="faq-icon">+</span>
                     </div>
-                    <div class="faq-a">Share this petition on WhatsApp groups, class groups, and with friends. The more
-                        signatures, the stronger the collective voice.</div>
+                    <div class="faq-a">Students deserve to know what they're paying ₹1,000+ for. Revealing the lineup
+                        helps everyone make an informed decision about whether the fest is worth the price for them.
+                    </div>
                 </div>
             </div>
         </div>
@@ -262,7 +358,6 @@
         </div>
     </footer>
 
-    <!-- SCROLL TO TOP -->
     <button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
     <script type="module" src="script.js"></script>

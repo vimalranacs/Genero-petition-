@@ -35,31 +35,18 @@ const BRANCH_OPTIONS = {
         "Civil Engineering",
         "Other"
     ],
-    "BCA": [
-        "BCA",
-        "BCA (Cloud Computing)",
-        "Other"
-    ],
+    "BCA": ["BCA", "BCA (Cloud Computing)", "Other"],
     "MBA": [
-        "MBA (Marketing)",
-        "MBA (Finance)",
-        "MBA (HR)",
-        "MBA (IT)",
-        "MBA (International Business)",
-        "MBA (Operations)",
-        "Other"
+        "MBA (Marketing)", "MBA (Finance)", "MBA (HR)",
+        "MBA (IT)", "MBA (International Business)", "MBA (Operations)", "Other"
     ],
-    "MCA": [
-        "MCA",
-        "Other"
-    ]
+    "MCA": ["MCA", "Other"]
 };
 
 // ===== GLOBALS =====
 let allStudents = [];
 let studentsShown = 0;
 
-// ===== SAFE DOM HELPER =====
 function $(id) { return document.getElementById(id); }
 
 // ===== INIT =====
@@ -78,20 +65,17 @@ window.togglePetition = () => {
     if (icon) icon.classList.toggle("open");
 };
 
-// ===== SCROLL TO SIGN =====
 window.scrollToSign = () => {
     const el = $("signSection");
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 };
 
-// ===== FAQ TOGGLE =====
+// ===== FAQ =====
 window.toggleFaq = (el) => {
     const answer = el.nextElementSibling;
     const isOpen = el.classList.contains("open");
-    // close all
     document.querySelectorAll(".faq-q").forEach(q => q.classList.remove("open"));
     document.querySelectorAll(".faq-a").forEach(a => a.classList.remove("open"));
-    // open clicked
     if (!isOpen) {
         el.classList.add("open");
         if (answer) answer.classList.add("open");
@@ -115,7 +99,7 @@ window.updateBranchOptions = () => {
     if (!branchSelect) return;
 
     branchSelect.innerHTML = '<option value="">Select Branch</option>';
-    if (otherInput) otherInput.style.display = "none";
+    if (otherInput) { otherInput.style.display = "none"; otherInput.required = false; }
 
     const branches = BRANCH_OPTIONS[course] || [];
     branches.forEach(b => {
@@ -125,8 +109,7 @@ window.updateBranchOptions = () => {
         branchSelect.appendChild(opt);
     });
 
-    // Show/hide "Other" text input
-    branchSelect.addEventListener("change", () => {
+    branchSelect.onchange = () => {
         if (otherInput) {
             if (branchSelect.value === "Other") {
                 otherInput.style.display = "block";
@@ -137,17 +120,17 @@ window.updateBranchOptions = () => {
                 otherInput.value = "";
             }
         }
-    });
+    };
 };
 
-// ===== FORM SETUP =====
+// ===== FORM =====
 function setupForm() {
     const form = $("petitionForm");
     if (!form) return;
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        if (!db) { showMsg("Database is not available. Please try again later.", "error"); return; }
+        if (!db) { showMsg("Database not available. Try again later.", "error"); return; }
 
         const name = ($("nameInput")?.value || "").trim();
         const roll = ($("rollInput")?.value || "").trim();
@@ -155,7 +138,6 @@ function setupForm() {
         let branch = ($("branchSelect")?.value || "");
         const year = ($("yearSelect")?.value || "");
 
-        // If "Other" is selected, use the text input
         if (branch === "Other") {
             branch = ($("otherBranchInput")?.value || "").trim();
             if (!branch) { showMsg("Please enter your branch name.", "warning"); return; }
@@ -178,31 +160,68 @@ function setupForm() {
                 return;
             }
 
+            const normalizedBranch = branch.toUpperCase();
             await addDoc(collection(db, "signatures"), {
-                name,
-                roll,
-                course,
-                branch: branch.toUpperCase(),
+                name, roll, course,
+                branch: normalizedBranch,
                 year,
                 timestamp: Date.now()
             });
 
-            showMsg("Thank you! Your signature has been recorded.", "success");
+            showMsg("Thank you! Your signature & pledge have been recorded.", "success");
+
+            // Show certificate
+            showCertificate(name, normalizedBranch, course, year, allStudents.length + 1);
+
             form.reset();
             if ($("otherBranchInput")) $("otherBranchInput").style.display = "none";
-            // Reset branch dropdown
             const branchSelect = $("branchSelect");
             if (branchSelect) branchSelect.innerHTML = '<option value="">Select Branch (choose course first)</option>';
             loadSignatures();
 
         } catch (err) {
             console.error("Sign error:", err);
-            showMsg("Failed to sign. Check your connection and try again.", "error");
+            showMsg("Failed to sign. Check connection and try again.", "error");
         } finally {
-            if (btn) { btn.textContent = "Sign Petition"; btn.disabled = false; }
+            if (btn) { btn.textContent = "Sign Petition & Take Pledge"; btn.disabled = false; }
         }
     });
 }
+
+// ===== CERTIFICATE =====
+function showCertificate(name, branch, course, year, number) {
+    const overlay = $("certOverlay");
+    if (!overlay) return;
+
+    const certName = $("certName");
+    const certBranch = $("certBranch");
+    const certCourse = $("certCourse");
+    const certYear = $("certYear");
+    const certNumber = $("certNumber");
+    const certDate = $("certDate");
+
+    if (certName) certName.textContent = name;
+    if (certBranch) certBranch.textContent = branch;
+    if (certCourse) certCourse.textContent = course;
+    if (certYear) certYear.textContent = year;
+    if (certNumber) certNumber.textContent = number;
+    if (certDate) certDate.textContent = new Date().toLocaleDateString("en-IN", {
+        day: "numeric", month: "long", year: "numeric"
+    });
+
+    overlay.classList.add("active");
+    document.body.style.overflow = "hidden";
+}
+
+window.closeCertificate = (e) => {
+    const overlay = $("certOverlay");
+    const container = $("certContainer");
+    // Close only when clicking outside the cert
+    if (e.target === overlay || (container && !container.contains(e.target))) {
+        overlay.classList.remove("active");
+        document.body.style.overflow = "";
+    }
+};
 
 // ===== MESSAGE HELPER =====
 function showMsg(text, type) {
@@ -233,6 +252,9 @@ async function loadSignatures() {
         const pill = $("signedCountPill");
         if (pill) pill.textContent = count + " signature" + (count !== 1 ? "s" : "");
 
+        const pledgeCount = $("pledgeCount");
+        if (pledgeCount) pledgeCount.textContent = count;
+
         allStudents = [];
         let branchStats = {};
         let yearStats = {};
@@ -240,17 +262,13 @@ async function loadSignatures() {
         snapshot.forEach(docSnap => {
             const d = docSnap.data();
             allStudents.push(d);
-
-            const normalizedBranch = (d.branch || "Unknown").toUpperCase().trim();
-            branchStats[normalizedBranch] = (branchStats[normalizedBranch] || 0) + 1;
+            const nb = (d.branch || "Unknown").toUpperCase().trim();
+            branchStats[nb] = (branchStats[nb] || 0) + 1;
             yearStats[d.year || "Unknown"] = (yearStats[d.year || "Unknown"] || 0) + 1;
         });
 
         allStudents.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-
-        // Build ticker
         buildTicker();
-
         studentsShown = 0;
         renderStudents();
         drawCharts(branchStats, yearStats);
@@ -275,14 +293,14 @@ function buildTicker() {
     section.style.display = "block";
 }
 
-// ===== RENDER STUDENT LIST =====
+// ===== RENDER STUDENTS =====
 function renderStudents() {
     const container = $("studentList");
     const loadMoreBtn = $("loadMoreBtn");
     if (!container) return;
 
     if (allStudents.length === 0) {
-        container.innerHTML = '<p class="empty-state">No signatures yet. Be the first to sign!</p>';
+        container.innerHTML = '<p class="empty-state">No signatures yet. Be the first!</p>';
         if (loadMoreBtn) loadMoreBtn.style.display = "none";
         return;
     }
@@ -363,12 +381,11 @@ window.postComment = async () => {
     const btn = $("commentBtn");
 
     if (!text) { showMsg("Please write something before posting.", "warning"); return; }
-    if (text.length > 500) { showMsg("Comment is too long (max 500 characters).", "warning"); return; }
+    if (text.length > 500) { showMsg("Comment too long (max 500 characters).", "warning"); return; }
 
     if (btn) { btn.textContent = "Posting..."; btn.disabled = true; }
 
     try {
-        // Check for duplicate comment
         const q = query(collection(db, "comments"), where("text", "==", text));
         const existing = await getDocs(q);
         if (!existing.empty) {
@@ -377,12 +394,7 @@ window.postComment = async () => {
             return;
         }
 
-        await addDoc(collection(db, "comments"), {
-            text,
-            time: Date.now(),
-            likes: 0
-        });
-
+        await addDoc(collection(db, "comments"), { text, time: Date.now(), likes: 0 });
         if (textarea) textarea.value = "";
         showMsg("Comment posted!", "success");
         await loadComments();
@@ -407,7 +419,6 @@ async function loadComments() {
             return;
         }
 
-        // Collect and deduplicate
         const seen = new Set();
         const comments = [];
         snap.forEach(docSnap => {
@@ -420,8 +431,6 @@ async function loadComments() {
         });
 
         comments.sort((a, b) => (b.time || 0) - (a.time || 0));
-
-        // Get likes from localStorage
         const likedComments = JSON.parse(localStorage.getItem("likedComments") || "[]");
 
         container.innerHTML = "";
@@ -447,15 +456,13 @@ async function loadComments() {
         });
     } catch (err) {
         console.error("Load comments error:", err);
-        container.innerHTML = '<p class="empty-state">Could not load comments. Check your connection.</p>';
+        container.innerHTML = '<p class="empty-state">Could not load comments.</p>';
     }
 }
 
-// ===== LIKE COMMENT =====
+// ===== LIKE =====
 window.likeComment = async (commentId, btnEl) => {
     if (!db) return;
-
-    // Check if already liked via localStorage
     const likedComments = JSON.parse(localStorage.getItem("likedComments") || "[]");
     if (likedComments.includes(commentId)) return;
 
@@ -467,11 +474,9 @@ window.likeComment = async (commentId, btnEl) => {
         const currentLikes = snap.data().likes || 0;
         await updateDoc(ref, { likes: currentLikes + 1 });
 
-        // Save to localStorage
         likedComments.push(commentId);
         localStorage.setItem("likedComments", JSON.stringify(likedComments));
 
-        // Update UI immediately
         if (btnEl) {
             btnEl.classList.add("liked");
             btnEl.disabled = true;
@@ -512,7 +517,7 @@ window.shareTwitter = () => {
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://generopetition.netlify.app/")}`);
 };
 
-// ===== XSS PROTECTION =====
+// ===== XSS =====
 function escapeHtml(str) {
     const div = document.createElement("div");
     div.textContent = str || "";
