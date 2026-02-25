@@ -24,7 +24,7 @@
             <p class="hero-sub">A collective student initiative for fair and inclusive participation in the upcoming
                 fest.</p>
 
-            <div class="hero-stats" id="heroStats">
+            <div class="hero-stats">
                 <div class="stat-item">
                     <span class="stat-num" id="heroCount">—</span>
                     <span class="stat-label">Signatures</span>
@@ -103,7 +103,7 @@
     <section class="section" id="signSection">
         <div class="wrap">
             <h2 class="section-title">Add Your Signature</h2>
-            <p class="section-desc">Your identity is recorded but displayed anonymously in the public list.</p>
+            <p class="section-desc">Your identity is recorded. Names are displayed publicly.</p>
 
             <form id="petitionForm" class="sign-form">
                 <div class="form-row">
@@ -111,7 +111,7 @@
                     <input type="text" id="rollInput" placeholder="Roll Number" required>
                 </div>
 
-                <select id="courseSelect" required>
+                <select id="courseSelect" required onchange="updateBranchOptions()">
                     <option value="">Select Course</option>
                     <option value="B.Tech">B.Tech</option>
                     <option value="BCA">BCA</option>
@@ -120,7 +120,9 @@
                 </select>
 
                 <div class="form-row">
-                    <input type="text" id="branchInput" placeholder="Branch (e.g. CSE, IT, ECE)" required>
+                    <select id="branchSelect" required>
+                        <option value="">Select Branch (choose course first)</option>
+                    </select>
                     <select id="yearSelect" required>
                         <option value="">Select Year</option>
                         <option value="1st Year">1st Year</option>
@@ -130,10 +132,20 @@
                     </select>
                 </div>
 
-                <button type="submit" id="submitBtn" class="btn-primary">Sign Petition</button>
+                <!-- Other branch input (hidden by default) -->
+                <input type="text" id="otherBranchInput" placeholder="Enter your branch name" style="display:none">
+
+                <button type="submit" id="submitBtn" class="btn-primary btn-full">Sign Petition</button>
             </form>
 
             <div id="message"></div>
+        </div>
+    </section>
+
+    <!-- ===== RECENTLY SIGNED TICKER ===== -->
+    <section class="ticker-section" id="tickerSection" style="display:none">
+        <div class="wrap">
+            <div class="ticker" id="ticker"></div>
         </div>
     </section>
 
@@ -160,7 +172,6 @@
         <div class="wrap">
             <h2 class="section-title">Statistics</h2>
             <p class="section-desc">Distribution of signatures across branches and years.</p>
-
             <div class="chart-grid">
                 <div class="chart-card">
                     <h4>By Branch</h4>
@@ -178,11 +189,11 @@
     <section class="section section-alt">
         <div class="wrap">
             <h2 class="section-title">Student Opinions</h2>
-            <p class="section-desc">Share your thoughts anonymously.</p>
+            <p class="section-desc">Share your thoughts anonymously. Duplicates are filtered out.</p>
 
             <div class="comment-form">
                 <textarea id="commentText" placeholder="Write your opinion here..." rows="3"></textarea>
-                <button class="btn-primary" onclick="postComment()" id="commentBtn">Post Comment</button>
+                <button class="btn-primary btn-full" onclick="postComment()" id="commentBtn">Post Comment</button>
             </div>
 
             <div id="commentsList"></div>
@@ -193,7 +204,7 @@
     <section class="section share-section">
         <div class="wrap">
             <h2 class="section-title">Spread the Word</h2>
-            <p class="section-desc">Help more students see this petition.</p>
+            <p class="section-desc">Share this petition with your friends and class groups.</p>
             <div class="share-buttons">
                 <button class="btn-share btn-copy" onclick="copyLink()">🔗 Copy Link</button>
                 <button class="btn-share btn-wa" onclick="shareWhatsApp()">📲 WhatsApp</button>
@@ -202,12 +213,57 @@
         </div>
     </section>
 
+    <!-- ===== FAQ ===== -->
+    <section class="section section-alt">
+        <div class="wrap">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-q" onclick="toggleFaq(this)">
+                        <span>Is this petition against the college or organizers?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-a">No. This is a respectful collective student request for reconsideration of ticket
+                        pricing. It supports the fest while asking for fair pricing.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q" onclick="toggleFaq(this)">
+                        <span>Is my information safe?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-a">Your name and branch are publicly displayed. Your roll number is stored securely
+                        and only used to prevent duplicate signatures.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q" onclick="toggleFaq(this)">
+                        <span>Can I sign more than once?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-a">No. Each roll number can only sign once to maintain the petition's credibility
+                        and accurate count.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q" onclick="toggleFaq(this)">
+                        <span>How can I help beyond signing?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-a">Share this petition on WhatsApp groups, class groups, and with friends. The more
+                        signatures, the stronger the collective voice.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ===== FOOTER ===== -->
     <footer class="footer">
         <div class="wrap">
             <p>Student Voice — Built with care by students, for students.</p>
+            <a href="admin.html" class="admin-link">Admin</a>
         </div>
     </footer>
+
+    <!-- SCROLL TO TOP -->
+    <button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
     <script type="module" src="script.js"></script>
 </body>

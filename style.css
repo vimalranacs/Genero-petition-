@@ -65,7 +65,6 @@ body {
     letter-spacing: 0.5px;
     text-transform: uppercase;
     margin-bottom: 20px;
-    backdrop-filter: blur(4px);
 }
 
 .hero h1 {
@@ -81,10 +80,8 @@ body {
     font-size: 0.95rem;
     max-width: 440px;
     margin: 0 auto 28px;
-    line-height: 1.5;
 }
 
-/* Hero Stats */
 .hero-stats {
     display: flex;
     justify-content: center;
@@ -118,7 +115,6 @@ body {
     background: rgba(255, 255, 255, 0.15);
 }
 
-/* Progress */
 .progress-wrap {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 100px;
@@ -135,7 +131,6 @@ body {
     transition: width 1s ease;
 }
 
-/* Hero Buttons */
 .hero-actions {
     display: flex;
     gap: 12px;
@@ -143,6 +138,7 @@ body {
     flex-wrap: wrap;
 }
 
+/* ===== BUTTONS ===== */
 .btn-primary {
     background: #3b82f6;
     color: #fff;
@@ -170,6 +166,10 @@ body {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
+}
+
+.btn-full {
+    width: 100%;
 }
 
 .btn-secondary {
@@ -283,7 +283,7 @@ body {
 }
 
 .petition-content h4 {
-    font-size: 0.88rem;
+    font-size: 0.82rem;
     font-weight: 600;
     color: #1e293b;
     margin: 20px 0 10px;
@@ -403,7 +403,6 @@ textarea {
     min-height: 80px;
 }
 
-/* Messages */
 #message:empty {
     display: none;
 }
@@ -445,6 +444,32 @@ textarea {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* ===== TICKER ===== */
+.ticker-section {
+    padding: 12px 20px;
+    background: #eff6ff;
+    border-bottom: 1px solid #dbeafe;
+    overflow: hidden;
+}
+
+.ticker {
+    white-space: nowrap;
+    animation: tickerScroll 20s linear infinite;
+    font-size: 0.82rem;
+    color: #3b82f6;
+    font-weight: 500;
+}
+
+@keyframes tickerScroll {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-100%);
     }
 }
 
@@ -551,6 +576,11 @@ canvas {
     border-radius: 8px;
     padding: 14px 16px;
     margin-bottom: 8px;
+    transition: border-color 0.2s;
+}
+
+.comment-card:hover {
+    border-color: #cbd5e1;
 }
 
 .comment-card p {
@@ -560,11 +590,46 @@ canvas {
     line-height: 1.5;
 }
 
+.comment-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+}
+
 .comment-time {
-    display: block;
-    color: #94a3b8;
     font-size: 0.72rem;
-    margin-top: 6px;
+    color: #94a3b8;
+}
+
+.like-btn {
+    background: none;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.78rem;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s;
+    width: auto;
+    font-family: inherit;
+}
+
+.like-btn:hover {
+    border-color: #f87171;
+    color: #ef4444;
+    background: #fef2f2;
+    transform: none;
+    box-shadow: none;
+}
+
+.like-btn.liked {
+    border-color: #f87171;
+    color: #ef4444;
+    background: #fef2f2;
 }
 
 /* ===== SHARE ===== */
@@ -599,6 +664,8 @@ canvas {
 
 .btn-copy:hover {
     background: #e2e8f0;
+    transform: none;
+    box-shadow: none;
 }
 
 .btn-wa {
@@ -621,6 +688,58 @@ canvas {
     box-shadow: 0 3px 10px rgba(29, 155, 240, 0.25);
 }
 
+/* ===== FAQ ===== */
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.faq-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.faq-q {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #1e293b;
+    user-select: none;
+}
+
+.faq-icon {
+    font-size: 1.2rem;
+    color: #94a3b8;
+    transition: transform 0.2s;
+    font-weight: 300;
+}
+
+.faq-q.open .faq-icon {
+    transform: rotate(45deg);
+}
+
+.faq-a {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 16px;
+    font-size: 0.86rem;
+    color: #64748b;
+    line-height: 1.6;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.faq-a.open {
+    max-height: 200px;
+    padding: 0 16px 14px;
+}
+
 /* ===== FOOTER ===== */
 .footer {
     padding: 24px 20px;
@@ -628,6 +747,52 @@ canvas {
     color: #94a3b8;
     font-size: 0.8rem;
     border-top: 1px solid #e2e8f0;
+}
+
+.admin-link {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 0.72rem;
+    display: inline-block;
+    margin-top: 6px;
+}
+
+.admin-link:hover {
+    color: #94a3b8;
+}
+
+/* ===== SCROLL TO TOP ===== */
+.scroll-top {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.scroll-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.scroll-top:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
 }
 
 /* ===== RESPONSIVE ===== */

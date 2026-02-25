@@ -2,7 +2,7 @@
 import { initializeApp } from
     "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-    getFirestore, collection, addDoc, getDocs, query, where
+    getFirestore, collection, addDoc, getDocs, getDoc, updateDoc, doc, query, where
 } from
     "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { firebaseConfig } from "./firebase-config.js";
@@ -15,11 +15,49 @@ try {
     console.error("Firebase init failed:", err);
 }
 
-// ===== GLOBALS =====
+// ===== CONSTANTS =====
 const GOAL = 500;
+const STUDENTS_PER_PAGE = 12;
+
+// ===== BRANCH OPTIONS BY COURSE =====
+const BRANCH_OPTIONS = {
+    "B.Tech": [
+        "CSE",
+        "CSE (Data Science)",
+        "CSE (AI & ML)",
+        "CSE (Cyber Security)",
+        "CSE (IoT)",
+        "IT",
+        "ECE",
+        "EEE",
+        "Electrical Engineering",
+        "Mechanical Engineering",
+        "Civil Engineering",
+        "Other"
+    ],
+    "BCA": [
+        "BCA",
+        "BCA (Cloud Computing)",
+        "Other"
+    ],
+    "MBA": [
+        "MBA (Marketing)",
+        "MBA (Finance)",
+        "MBA (HR)",
+        "MBA (IT)",
+        "MBA (International Business)",
+        "MBA (Operations)",
+        "Other"
+    ],
+    "MCA": [
+        "MCA",
+        "Other"
+    ]
+};
+
+// ===== GLOBALS =====
 let allStudents = [];
 let studentsShown = 0;
-const STUDENTS_PER_PAGE = 12;
 
 // ===== SAFE DOM HELPER =====
 function $(id) { return document.getElementById(id); }
@@ -29,22 +67,77 @@ document.addEventListener("DOMContentLoaded", () => {
     setupForm();
     loadSignatures();
     loadComments();
+    setupScrollTop();
 });
 
 // ===== PETITION TOGGLE =====
 window.togglePetition = () => {
     const body = $("petitionBody");
     const icon = $("toggleIcon");
-    if (body && icon) {
-        body.classList.toggle("open");
-        icon.classList.toggle("open");
-    }
+    if (body) body.classList.toggle("open");
+    if (icon) icon.classList.toggle("open");
 };
 
 // ===== SCROLL TO SIGN =====
 window.scrollToSign = () => {
     const el = $("signSection");
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+};
+
+// ===== FAQ TOGGLE =====
+window.toggleFaq = (el) => {
+    const answer = el.nextElementSibling;
+    const isOpen = el.classList.contains("open");
+    // close all
+    document.querySelectorAll(".faq-q").forEach(q => q.classList.remove("open"));
+    document.querySelectorAll(".faq-a").forEach(a => a.classList.remove("open"));
+    // open clicked
+    if (!isOpen) {
+        el.classList.add("open");
+        if (answer) answer.classList.add("open");
+    }
+};
+
+// ===== SCROLL TO TOP =====
+function setupScrollTop() {
+    const btn = $("scrollTopBtn");
+    if (!btn) return;
+    window.addEventListener("scroll", () => {
+        btn.classList.toggle("visible", window.scrollY > 400);
+    });
+}
+
+// ===== DYNAMIC BRANCH DROPDOWN =====
+window.updateBranchOptions = () => {
+    const course = ($("courseSelect")?.value || "");
+    const branchSelect = $("branchSelect");
+    const otherInput = $("otherBranchInput");
+    if (!branchSelect) return;
+
+    branchSelect.innerHTML = '<option value="">Select Branch</option>';
+    if (otherInput) otherInput.style.display = "none";
+
+    const branches = BRANCH_OPTIONS[course] || [];
+    branches.forEach(b => {
+        const opt = document.createElement("option");
+        opt.value = b;
+        opt.textContent = b;
+        branchSelect.appendChild(opt);
+    });
+
+    // Show/hide "Other" text input
+    branchSelect.addEventListener("change", () => {
+        if (otherInput) {
+            if (branchSelect.value === "Other") {
+                otherInput.style.display = "block";
+                otherInput.required = true;
+            } else {
+                otherInput.style.display = "none";
+                otherInput.required = false;
+                otherInput.value = "";
+            }
+        }
+    });
 };
 
 // ===== FORM SETUP =====
@@ -54,13 +147,19 @@ function setupForm() {
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        if (!db) { showMsg("Database is not available.", "error"); return; }
+        if (!db) { showMsg("Database is not available. Please try again later.", "error"); return; }
 
         const name = ($("nameInput")?.value || "").trim();
         const roll = ($("rollInput")?.value || "").trim();
         const course = ($("courseSelect")?.value || "");
-        const branch = ($("branchInput")?.value || "").trim();
+        let branch = ($("branchSelect")?.value || "");
         const year = ($("yearSelect")?.value || "");
+
+        // If "Other" is selected, use the text input
+        if (branch === "Other") {
+            branch = ($("otherBranchInput")?.value || "").trim();
+            if (!branch) { showMsg("Please enter your branch name.", "warning"); return; }
+        }
 
         if (!name || !roll || !course || !branch || !year) {
             showMsg("Please fill all fields.", "warning");
@@ -71,7 +170,6 @@ function setupForm() {
         if (btn) { btn.textContent = "Signing..."; btn.disabled = true; }
 
         try {
-            // Duplicate check by roll
             const q = query(collection(db, "signatures"), where("roll", "==", roll));
             const snap = await getDocs(q);
 
@@ -84,18 +182,22 @@ function setupForm() {
                 name,
                 roll,
                 course,
-                branch: branch.toUpperCase(), // Normalize branch to uppercase
+                branch: branch.toUpperCase(),
                 year,
                 timestamp: Date.now()
             });
 
             showMsg("Thank you! Your signature has been recorded.", "success");
             form.reset();
-            loadSignatures(); // Refresh everything
+            if ($("otherBranchInput")) $("otherBranchInput").style.display = "none";
+            // Reset branch dropdown
+            const branchSelect = $("branchSelect");
+            if (branchSelect) branchSelect.innerHTML = '<option value="">Select Branch (choose course first)</option>';
+            loadSignatures();
 
         } catch (err) {
             console.error("Sign error:", err);
-            showMsg("Failed to sign. Please try again.", "error");
+            showMsg("Failed to sign. Check your connection and try again.", "error");
         } finally {
             if (btn) { btn.textContent = "Sign Petition"; btn.disabled = false; }
         }
@@ -119,47 +221,38 @@ async function loadSignatures() {
         const snapshot = await getDocs(collection(db, "signatures"));
         const count = snapshot.size;
 
-        // Update hero counter
         const heroCount = $("heroCount");
         if (heroCount) heroCount.textContent = count;
 
-        // Update goal percentage
         const goalPct = $("heroGoalPercent");
         if (goalPct) goalPct.textContent = Math.min(100, Math.round((count / GOAL) * 100)) + "%";
 
-        // Update progress bar
         const bar = $("progressBar");
         if (bar) bar.style.width = Math.min(100, (count / GOAL) * 100) + "%";
 
-        // Update pill
         const pill = $("signedCountPill");
         if (pill) pill.textContent = count + " signature" + (count !== 1 ? "s" : "");
 
-        // Collect data
         allStudents = [];
         let branchStats = {};
         let yearStats = {};
 
-        snapshot.forEach(doc => {
-            const d = doc.data();
+        snapshot.forEach(docSnap => {
+            const d = docSnap.data();
             allStudents.push(d);
 
-            // CASE-INSENSITIVE branch: normalize to uppercase
             const normalizedBranch = (d.branch || "Unknown").toUpperCase().trim();
             branchStats[normalizedBranch] = (branchStats[normalizedBranch] || 0) + 1;
-
-            const yr = d.year || "Unknown";
-            yearStats[yr] = (yearStats[yr] || 0) + 1;
+            yearStats[d.year || "Unknown"] = (yearStats[d.year || "Unknown"] || 0) + 1;
         });
 
-        // Sort students by timestamp (newest first)
         allStudents.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
-        // Render student list
+        // Build ticker
+        buildTicker();
+
         studentsShown = 0;
         renderStudents();
-
-        // Render charts
         drawCharts(branchStats, yearStats);
 
     } catch (err) {
@@ -167,6 +260,19 @@ async function loadSignatures() {
         const heroCount = $("heroCount");
         if (heroCount) heroCount.textContent = "—";
     }
+}
+
+// ===== TICKER =====
+function buildTicker() {
+    const ticker = $("ticker");
+    const section = $("tickerSection");
+    if (!ticker || !section || allStudents.length === 0) return;
+
+    const recent = allStudents.slice(0, 8);
+    ticker.innerHTML = recent.map(s =>
+        `<span style="margin-right:32px">✍️ <strong>${escapeHtml(s.name || "Someone")}</strong> from ${escapeHtml((s.branch || "").toUpperCase())} just signed</span>`
+    ).join("");
+    section.style.display = "block";
 }
 
 // ===== RENDER STUDENT LIST =====
@@ -182,7 +288,6 @@ function renderStudents() {
     }
 
     const end = Math.min(studentsShown + STUDENTS_PER_PAGE, allStudents.length);
-
     if (studentsShown === 0) container.innerHTML = "";
 
     for (let i = studentsShown; i < end; i++) {
@@ -197,26 +302,18 @@ function renderStudents() {
     }
 
     studentsShown = end;
-
-    if (loadMoreBtn) {
-        loadMoreBtn.style.display = (studentsShown < allStudents.length) ? "block" : "none";
-    }
+    if (loadMoreBtn) loadMoreBtn.style.display = (studentsShown < allStudents.length) ? "block" : "none";
 }
 
-window.showMoreStudents = () => { renderStudents(); };
+window.showMoreStudents = () => renderStudents();
 
 // ===== CHARTS =====
 let branchChart, yearChart;
 
 function drawCharts(branchStats, yearStats) {
-    const colors = [
-        '#3b82f6', '#f59e0b', '#10b981', '#ef4444',
-        '#8b5cf6', '#ec4899', '#06b6d4', '#f97316',
-        '#14b8a6', '#6366f1'
-    ];
+    const colors = ['#3b82f6', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316', '#14b8a6', '#6366f1'];
 
     try {
-        // Branch chart
         const branchEl = $("branchChart");
         if (branchEl && Object.keys(branchStats).length > 0) {
             if (branchChart) branchChart.destroy();
@@ -224,29 +321,19 @@ function drawCharts(branchStats, yearStats) {
                 type: "bar",
                 data: {
                     labels: Object.keys(branchStats),
-                    datasets: [{
-                        data: Object.values(branchStats),
-                        backgroundColor: colors,
-                        borderRadius: 6,
-                        borderSkipped: false
-                    }]
+                    datasets: [{ data: Object.values(branchStats), backgroundColor: colors, borderRadius: 6, borderSkipped: false }]
                 },
                 options: {
                     responsive: true,
                     plugins: { legend: { display: false } },
                     scales: {
                         x: { ticks: { color: "#64748b" }, grid: { display: false } },
-                        y: {
-                            ticks: { color: "#64748b", stepSize: 1 },
-                            grid: { color: "#f1f5f9" },
-                            beginAtZero: true
-                        }
+                        y: { ticks: { color: "#64748b", stepSize: 1 }, grid: { color: "#f1f5f9" }, beginAtZero: true }
                     }
                 }
             });
         }
 
-        // Year chart
         const yearEl = $("yearChart");
         if (yearEl && Object.keys(yearStats).length > 0) {
             if (yearChart) yearChart.destroy();
@@ -254,21 +341,11 @@ function drawCharts(branchStats, yearStats) {
                 type: "doughnut",
                 data: {
                     labels: Object.keys(yearStats),
-                    datasets: [{
-                        data: Object.values(yearStats),
-                        backgroundColor: colors,
-                        borderColor: "#fff",
-                        borderWidth: 2
-                    }]
+                    datasets: [{ data: Object.values(yearStats), backgroundColor: colors, borderColor: "#fff", borderWidth: 2 }]
                 },
                 options: {
                     responsive: true,
-                    plugins: {
-                        legend: {
-                            position: "bottom",
-                            labels: { color: "#475569", padding: 12, font: { size: 12 } }
-                        }
-                    }
+                    plugins: { legend: { position: "bottom", labels: { color: "#475569", padding: 12 } } }
                 }
             });
         }
@@ -285,19 +362,33 @@ window.postComment = async () => {
     const text = (textarea?.value || "").trim();
     const btn = $("commentBtn");
 
-    if (!text) return;
+    if (!text) { showMsg("Please write something before posting.", "warning"); return; }
+    if (text.length > 500) { showMsg("Comment is too long (max 500 characters).", "warning"); return; }
 
     if (btn) { btn.textContent = "Posting..."; btn.disabled = true; }
 
     try {
+        // Check for duplicate comment
+        const q = query(collection(db, "comments"), where("text", "==", text));
+        const existing = await getDocs(q);
+        if (!existing.empty) {
+            showMsg("This comment already exists.", "warning");
+            if (btn) { btn.textContent = "Post Comment"; btn.disabled = false; }
+            return;
+        }
+
         await addDoc(collection(db, "comments"), {
             text,
-            time: Date.now()
+            time: Date.now(),
+            likes: 0
         });
+
         if (textarea) textarea.value = "";
-        loadComments(); // Reload immediately
+        showMsg("Comment posted!", "success");
+        await loadComments();
     } catch (err) {
         console.error("Comment error:", err);
+        showMsg("Failed to post comment. Try again.", "error");
     } finally {
         if (btn) { btn.textContent = "Post Comment"; btn.disabled = false; }
     }
@@ -305,7 +396,6 @@ window.postComment = async () => {
 
 async function loadComments() {
     if (!db) return;
-
     const container = $("commentsList");
     if (!container) return;
 
@@ -317,47 +407,109 @@ async function loadComments() {
             return;
         }
 
+        // Collect and deduplicate
+        const seen = new Set();
         const comments = [];
-        snap.forEach(doc => comments.push(doc.data()));
+        snap.forEach(docSnap => {
+            const d = docSnap.data();
+            const key = (d.text || "").trim().toLowerCase();
+            if (!seen.has(key)) {
+                seen.add(key);
+                comments.push({ ...d, id: docSnap.id });
+            }
+        });
+
         comments.sort((a, b) => (b.time || 0) - (a.time || 0));
+
+        // Get likes from localStorage
+        const likedComments = JSON.parse(localStorage.getItem("likedComments") || "[]");
 
         container.innerHTML = "";
         comments.forEach(c => {
             const date = c.time
                 ? new Date(c.time).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
                 : "";
-            container.innerHTML += `
-                <div class="comment-card">
-                    <p>${escapeHtml(c.text)}</p>
-                    ${date ? `<span class="comment-time">${date}</span>` : ""}
+            const isLiked = likedComments.includes(c.id);
+            const likeCount = c.likes || 0;
+
+            const card = document.createElement("div");
+            card.className = "comment-card";
+            card.innerHTML = `
+                <p>${escapeHtml(c.text)}</p>
+                <div class="comment-footer">
+                    <span class="comment-time">${date}</span>
+                    <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="likeComment('${c.id}', this)" ${isLiked ? 'disabled' : ''}>
+                        ❤️ <span>${likeCount}</span>
+                    </button>
                 </div>
             `;
+            container.appendChild(card);
         });
     } catch (err) {
         console.error("Load comments error:", err);
-        container.innerHTML = '<p class="empty-state">Could not load comments.</p>';
+        container.innerHTML = '<p class="empty-state">Could not load comments. Check your connection.</p>';
     }
 }
 
-// ===== SHARE =====
-window.copyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    const btn = document.querySelector(".btn-copy");
-    if (btn) {
-        const orig = btn.textContent;
-        btn.textContent = "✅ Copied!";
-        setTimeout(() => btn.textContent = orig, 2000);
+// ===== LIKE COMMENT =====
+window.likeComment = async (commentId, btnEl) => {
+    if (!db) return;
+
+    // Check if already liked via localStorage
+    const likedComments = JSON.parse(localStorage.getItem("likedComments") || "[]");
+    if (likedComments.includes(commentId)) return;
+
+    try {
+        const ref = doc(db, "comments", commentId);
+        const snap = await getDoc(ref);
+        if (!snap.exists()) return;
+
+        const currentLikes = snap.data().likes || 0;
+        await updateDoc(ref, { likes: currentLikes + 1 });
+
+        // Save to localStorage
+        likedComments.push(commentId);
+        localStorage.setItem("likedComments", JSON.stringify(likedComments));
+
+        // Update UI immediately
+        if (btnEl) {
+            btnEl.classList.add("liked");
+            btnEl.disabled = true;
+            const countSpan = btnEl.querySelector("span");
+            if (countSpan) countSpan.textContent = currentLikes + 1;
+        }
+    } catch (err) {
+        console.error("Like error:", err);
     }
 };
 
+// ===== SHARE =====
+const SHARE_MESSAGE = `Hey everyone 👋
+
+A few of us students created a small petition regarding the Genero fest ticket pricing — just to request a more student-friendly price and extension of the early bird dates so more people can participate.
+
+It's completely respectful and just represents student concerns.
+
+If you agree, please take 30 seconds to sign and share it with your friends/groups 🙌
+
+🔗 https://generopetition.netlify.app/
+
+The more students sign, the stronger our collective voice becomes.
+Let's make Genero accessible for everyone ❤️`;
+
+window.copyLink = () => {
+    navigator.clipboard.writeText("https://generopetition.netlify.app/");
+    const btn = document.querySelector(".btn-copy");
+    if (btn) { const orig = btn.textContent; btn.textContent = "✅ Copied!"; setTimeout(() => btn.textContent = orig, 2000); }
+};
+
 window.shareWhatsApp = () => {
-    const text = "Student Voice — Sign the petition:\n" + window.location.href;
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+    window.open(`https://wa.me/?text=${encodeURIComponent(SHARE_MESSAGE)}`);
 };
 
 window.shareTwitter = () => {
-    const text = "Every student deserves to be heard. Sign the petition:";
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`);
+    const tweet = "Every student deserves to be heard. Sign the Genero petition for fair ticket pricing 🎭🙌";
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent("https://generopetition.netlify.app/")}`);
 };
 
 // ===== XSS PROTECTION =====
